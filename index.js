@@ -6,6 +6,7 @@ const throughout = require('throughout')
 const BufferList = require('bl')
 const htmlInjectMeta = require('html-inject-meta')
 const injectCSP = require('./inject-csp')
+const pkg = require('./package.json')
 
 module.exports = function(filename, opts) {
   opts = opts || {}
@@ -17,7 +18,11 @@ module.exports = function(filename, opts) {
     bl.append(body)
     const tho = throughout(
       htmlInjectMeta(opts),
-      injectCSP({csp: `script-src 'sha256-${sha}';`})
+      injectCSP({
+        csp: `script-src 'sha256-${sha}';`,
+        generator: `${pkg.name} ${pkg.version}`,
+        keywords: opts.keywords
+      })
     )
     ret.resolve(toPull.source(tho))
     bl.pipe(tho)

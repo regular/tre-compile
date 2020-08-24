@@ -3,10 +3,17 @@ const hyperstream = require('hyperstream')
 module.exports = htmlInjectCSP
 
 function extractInputData (output, data) {
-  const csp = data.csp
+  const {csp, generator, keywords} = data
   if (csp) {
     output['http-equiv']['Content-Security-Policy'] = csp
   }
+  if (generator) {
+    output.name.generator = generator
+  }
+  if (keywords) {
+    output.name.keywords = keywords.join(',')
+  }
+
 }
 
 function extractMetadataifyData(output, data) {
@@ -39,6 +46,8 @@ function fieldsToChanges (fields) {
 function htmlInjectCSP(data) {
   data = data || {}
   const fields = {name: {}, property: {}, link: {}, 'http-equiv': {} }
+  fields.name.referrer = 'same-origin'
+
   extractInputData(fields, data)
   extractMetadataifyData(fields, data['html-inject-meta'])
   return hyperstream(fieldsToChanges(fields));

@@ -1,6 +1,7 @@
 //#! /usr/bin/env node
 
 const fs = require('fs')
+const {dirname} = require('path')
 const pull = require('pull-stream')
 const {stdout} = require('pull-stdio')
 const minimist = require('minimist')
@@ -33,7 +34,7 @@ if (opts.meta) {
   execute(applyOverrides({}, opts))
 } else {
   // meta is not specified:
-  pkgUp().then( pkgpath => {
+  pkgUp({cwd: dirname(filename)}).then( pkgpath => {
     if (!pkgpath) printUsageAndExit()
     fs.readFile(pkgpath, processMetaFile)
   })
@@ -65,6 +66,7 @@ function applyOverrides (data, opts) {
   setField('description')
   setField('title', 'name')
   setField('author')
+  setField('keywords')
   setField('url')
 
   return data
