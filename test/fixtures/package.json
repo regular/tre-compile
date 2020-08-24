@@ -1,0 +1,9 @@
+{
+  "name": "foo",
+  "version": "1.0.0",
+  "description": "it's foo!",
+  "keywords": ["bar", "baz"],
+  "author": "Jan Bölsche <jan@lagomorph.de> (https://regular.codes/)",
+  "license": "ISC",
+  "homepage": "https://github.com/regular/tre-compile#readme"
+}
