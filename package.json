@@ -1,7 +1,7 @@
 {
   "name": "tre-compile",
   "version": "1.0.0",
-  "description": "",
+  "description": "compile js to a static web-executable (single html file)",
   "main": "index.js",
   "scripts": {
     "test": "tape test/**.js"
@@ -10,9 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/regular/tre-compile.git"
   },
-  "keywords": [],
+  "keywords": ["tre", "bay of plenty"],
   "author": "Jan Bölsche <jan@lagomorph.de> (https://regular.codes/)",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/regular/tre-compile/issues"
   },
