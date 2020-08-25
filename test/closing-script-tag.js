@@ -10,7 +10,7 @@ test('generated HTML has correct CSP meta tag', t=>{
   const tr = trumpet()
 
   pull(
-    compile(__dirname + '/fixtures/hello.js'),
+    compile(__dirname + '/fixtures/closing-script-tag.js'),
     toPull.sink(tr, err=>{
       if (err) throw err
     })
@@ -19,7 +19,7 @@ test('generated HTML has correct CSP meta tag', t=>{
   tr.select('head > meta[http-equiv=Content-Security-Policy]', elem =>{
     elem.getAttribute('content', content => {
       console.log('content', content)
-      t.equal(content, "script-src 'sha256-CUw8HveZ/Ul1RlVYNFUk8BlVufRthQdGgoSP/WMYY9o=';")
+      t.equal(content, "script-src 'sha256-W4SQyoH4c7dyAi1kw8mICu8k61g5USwldheyjN97uBU=';")
     })
   })
 })
