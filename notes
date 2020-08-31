@@ -1,4 +1,4 @@
-csp meta tag goes into head
+- [x] csp meta tag goes into head
 https://content-security-policy.com/examples/meta/
 <meta http-equiv="Content-Security-Policy" content="script-src 'sha256-${scriptHash}';">
 
@@ -7,7 +7,7 @@ https://github.com/WebAssembly/content-security-policy/blob/master/proposals/CSP
 script-src: 'sha...' at some point will apply to wasm too
 if that doesn't work: 'wasm-unsafe-eval' (used like unsafe-eval) to allow all wasm.
 
-sodium-browserify-tweetnaclI is the sodium impl with wasm.
+sodium-browserify-tweetnaclI is the sodium impl without wasm.
 sodium-browserify uses the above as default and tries to upgrade to wasm
 
 to avoid error messages when downgrading from native and from wasm to js impl of crypto stuff, we could make ssb-keys (and others) use tweetnacl instead of chloride. Would be interesting to see if there is any performance degration. Could be done with swapify in the webapp's package.json.
