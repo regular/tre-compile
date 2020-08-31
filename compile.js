@@ -32,6 +32,7 @@ module.exports = function compile(filename, cb) {
         console.error(err.message)
         return cb(err)
       }
+      debug('script hash is %s', sha)
       cb(null, {sha, body: buffer})
     }))
   }))
