@@ -6,8 +6,13 @@ const BufferList = require('bl')
 const eolfix = require('eol-fix-stream')
 const htmlInlineEscape = require('./html-inline-escape')
 
-module.exports = function compile(filename, cb) {
-  const browserify = Browserify()
+module.exports = function compile(filename, opts, cb) {
+  if (typeof opts == 'function') {
+    cb = opts
+    opts = null
+  }
+  opts = opts || {}
+  const browserify = Browserify(opts)
   browserify.transform(file => eolfix(), {global: true})
   browserify.add(filename)
   browserify.bundle()
