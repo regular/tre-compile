@@ -15,7 +15,7 @@ module.exports = function addMeta(body, sha, opts) {
     injectCSP({
       csp: `script-src 'sha256-${sha}';`,
       generator: `${pkg.name} ${pkg.version}`,
-      keywords: opts.keywords
+      keywords: opts['html-inject-meta'].keywords || opts.keywords
     })
   )
   const ret = pull(

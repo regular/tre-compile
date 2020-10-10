@@ -2,7 +2,7 @@ const hyperstream = require('hyperstream')
 
 module.exports = htmlInjectCSP
 
-function extractInputData (output, data) {
+function extractInputData(output, data) {
   const {csp, generator, keywords} = data
   if (csp) {
     output['http-equiv']['Content-Security-Policy'] = csp
@@ -11,9 +11,9 @@ function extractInputData (output, data) {
     output.name.generator = generator
   }
   if (keywords) {
-    output.name.keywords = keywords.join(',')
+    const kws = Array.isArray(keywords) ? keywords.join(',') : `${keywords}`
+    output.name.keywords = kws
   }
-
 }
 
 function extractMetadataifyData(output, data) {
@@ -21,7 +21,7 @@ function extractMetadataifyData(output, data) {
   extractInputData(output, data)
 }
 
-function fieldsToChanges (fields) {
+function fieldsToChanges(fields) {
   const changes = {}
   const metaprops = 'name property http-equiv'.split(' ')
   let metaTagsContent = ''

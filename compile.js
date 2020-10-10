@@ -12,6 +12,7 @@ module.exports = function compile(filename, opts, cb) {
     opts = null
   }
   opts = opts || {}
+  debug('browserify opts: %o', opts)
   const browserify = Browserify(opts)
   browserify.transform(file => eolfix(), {global: true})
   browserify.add(filename)
