@@ -24,9 +24,9 @@
   },
   "homepage": "https://github.com/regular/tre-compile#readme",
   "dependencies": {
-    "bl": "^4.0.2",
-    "browserify": "^16.5.2",
-    "debug": "^4.1.1",
+    "bl": "^4.0.3",
+    "browserify": "^17.0.0",
+    "debug": "^4.2.0",
     "eol-fix-stream": "^1.0.0",
     "html-inject-meta": "^3.0.0",
     "hyperstream": "^1.2.2",
