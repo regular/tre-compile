@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
 const fs = require('fs')
-const {dirname} = require('path')
+const {dirname, resolve} = require('path')
 const pull = require('pull-stream')
 const {stdout} = require('pull-stdio')
 const minimist = require('minimist')
 const pkgUp = require('pkg-up')
 const compileSource = require('./')
+const {workingDirIsClean, gitInfo} = require('./git-meta')
 
 const argv = minimist(process.argv.slice(2))
 
@@ -88,6 +89,29 @@ function processMetaFile(err, data) {
 }
 
 function execute(opts) {
+  const sourceFile = resolve(filename)
+  console.error('source:', sourceFile)
+  const repoPath = dirname(sourceFile)
+  console.error('repository path:', repoPath)
+
+  workingDirIsClean(repoPath, err=>{
+    if (err && !argv.force) {
+      console.error(err.message)
+      process.exit(1)
+    } else if (err) {
+      console.error('Working directory is not clean -- forced to continue anyway')
+    }
+    gitInfo(repoPath, (err, info) =>{
+      if (err) {
+      console.error(err.message)
+        process.exit(1)
+      }
+      compileToStdout(filename, Object.assign({}, opts, info))
+    })
+  })
+}
+
+function compileToStdout(filename, opts) {
   pull(
     compileSource(filename, opts),
     stdout(err=>{
@@ -98,4 +122,3 @@ function execute(opts) {
     })
   )
 }
-

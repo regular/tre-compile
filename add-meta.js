@@ -13,6 +13,9 @@ module.exports = function addMeta(body, sha, opts) {
   const tho = throughout(
     htmlInjectMeta(opts),
     injectCSP({
+      repositoryUrl: opts.repositoryUrl,
+      repositoryBranch: opts.repositoryBranch,
+      commit: opts.commit,
       csp: `script-src 'sha256-${sha}';`,
       generator: `${pkg.name} ${pkg.version}`,
       keywords: opts['html-inject-meta'].keywords || opts.keywords
