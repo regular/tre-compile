@@ -30,7 +30,7 @@
     "eol-fix-stream": "^1.0.0",
     "html-inject-meta": "^3.0.0",
     "hyperstream": "^1.2.2",
-    "indexhtmlify": "^2.0.0",
+    "indexhtmlify": "github:regular/indexhtmlify#patch-2",
     "minimist": "^1.2.5",
     "pkg-up": "^3.1.0",
     "pull-defer": "^0.2.3",
