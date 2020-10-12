@@ -1,6 +1,6 @@
 {
   "name": "tre-compile",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "description": "compile js to a static web-executable (single html file)",
   "main": "index.js",
   "bin": {
