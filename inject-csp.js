@@ -3,7 +3,7 @@ const hyperstream = require('hyperstream')
 module.exports = htmlInjectCSP
 
 function extractInputData(output, data) {
-  const {csp, generator, keywords, repositoryUrl, repositoryBranch, commit} = data
+  const {csp, generator, keywords, repositoryUrl, repositoryBranch, commit, main} = data
   if (csp) {
     output['http-equiv']['Content-Security-Policy'] = csp
   }
@@ -11,13 +11,16 @@ function extractInputData(output, data) {
     output.name.generator = generator
   }
   if (repositoryUrl) {
-    output.name['repository-url'] = repositoryUrl
+    output.name['tre:repository-url'] = repositoryUrl
   }
   if (repositoryBranch) {
-    output.name['repository-branch'] = repositoryBranch
+    output.name['tre:repository-branch'] = repositoryBranch
   }
   if (commit) {
-    output.name.commit = commit
+    output.name[`tre:commit`] = commit
+  }
+  if (main) {
+    output.name[`tre:main`] = main
   }
   if (keywords) {
     const kws = Array.isArray(keywords) ? keywords.join(',') : `${keywords}`

@@ -16,6 +16,7 @@ module.exports = function addMeta(body, sha, opts) {
       repositoryUrl: opts.repositoryUrl,
       repositoryBranch: opts.repositoryBranch,
       commit: opts.commit,
+      main: opts.main,
       csp: `script-src 'sha256-${sha}';`,
       generator: `${pkg.name} ${pkg.version}`,
       keywords: opts['html-inject-meta'].keywords || opts.keywords

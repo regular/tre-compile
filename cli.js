@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require('fs')
-const {dirname, resolve} = require('path')
+const {dirname, resolve, relative} = require('path')
 const pull = require('pull-stream')
 const {stdout} = require('pull-stdio')
 const minimist = require('minimist')
@@ -90,9 +90,11 @@ function processMetaFile(err, data) {
 
 function execute(opts) {
   const sourceFile = resolve(filename)
-  console.error('source:', sourceFile)
+  //console.error('source:', sourceFile)
   const repoPath = dirname(sourceFile)
   console.error('repository path:', repoPath)
+  const main = relative(repoPath, sourceFile)
+  console.error('main:', main)
 
   workingDirIsClean(repoPath, err=>{
     if (err && !argv.force) {
@@ -106,7 +108,7 @@ function execute(opts) {
       console.error(err.message)
         process.exit(1)
       }
-      compileToStdout(filename, Object.assign({}, opts, info))
+      compileToStdout(filename, Object.assign({}, opts, info, {main}))
     })
   })
 }
