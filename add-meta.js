@@ -19,7 +19,7 @@ module.exports = function addMeta(body, sha, opts) {
       main: opts.main,
       csp: `style-src 'unsafe-inline' 'self'; font-src blob: 'self'; worker-src blob: 'self'; script-src 'sha256-${sha}'`,
       generator: `${pkg.name} ${pkg.version}`,
-      keywords: opts['html-inject-meta'].keywords || opts.keywords
+      keywords: (opts['html-inject-meta'] && opts['html-inject-meta'].keywords) || opts.keywords
     })
   )
   const ret = pull(
