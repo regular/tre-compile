@@ -3,7 +3,7 @@ const hyperstream = require('hyperstream')
 module.exports = htmlInjectCSP
 
 function extractInputData(output, data) {
-  const {csp, generator, keywords, repositoryUrl, repositoryBranch, commit, main} = data
+  const {csp, generator, keywords, repositoryUrl, repositoryBranch, commit, main, base} = data
   if (csp) {
     output['http-equiv']['Content-Security-Policy'] = csp
   }
@@ -26,6 +26,7 @@ function extractInputData(output, data) {
     const kws = Array.isArray(keywords) ? keywords.join(',') : `${keywords}`
     output.name.keywords = kws
   }
+  output.base = base
 }
 
 function extractMetadataifyData(output, data) {
@@ -48,10 +49,12 @@ function fieldsToChanges(fields) {
     }
   }
 
+  if (fields.base) {
+    metaTagsContent += `<base href="${fields.base}">\n`
+  }
   if (metaTagsContent.length > 0) {
     changes.head = {_appendHtml: metaTagsContent}
   }
-
   return changes
 }
 

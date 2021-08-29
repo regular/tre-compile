@@ -19,7 +19,8 @@ module.exports = function addMeta(body, sha, opts) {
       main: opts.main,
       csp: `script-src 'sha256-${sha}';`,
       generator: `${pkg.name} ${pkg.version}`,
-      keywords: (opts['html-inject-meta'] && opts['html-inject-meta'].keywords) || opts.keywords
+      keywords: (opts['html-inject-meta'] && opts['html-inject-meta'].keywords) || opts.keywords,
+      base: opts.base
     })
   )
   const ret = pull(
