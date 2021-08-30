@@ -17,7 +17,7 @@ module.exports = function addMeta(body, sha, opts) {
       repositoryBranch: opts.repositoryBranch,
       commit: opts.commit,
       main: opts.main,
-      csp: `script-src 'sha256-${sha}';`,
+      csp: `script-src 'sha256-${sha}' 'wasm-eval'; worker-src blob: data: 'self' 'wasm-eval'`,
       generator: `${pkg.name} ${pkg.version}`,
       keywords: (opts['html-inject-meta'] && opts['html-inject-meta'].keywords) || opts.keywords,
       base: opts.base
