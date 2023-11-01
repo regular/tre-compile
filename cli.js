@@ -8,8 +8,10 @@ const minimist = require('minimist')
 const pkgUp = require('pkg-up')
 const compileSource = require('./')
 const {workingDirIsClean, gitInfo} = require('./git-meta')
+const debug = require('debug')('cli')
 
 const argv = minimist(process.argv.slice(2))
+debug('argv', argv)
 
 if (argv._.length<1 || argv.help) {
   const bin = argv['run-by-tre-cli'] ? 'tre compile' : 'tre-compile'
@@ -27,7 +29,7 @@ const filename = argv._[0]
 if (argv.meta) {
   // input is specified:
   fs.readFile(argv.meta, processMetaFile)
-} else if (argv.meta === false) {
+} else if (argv.meta === false || argv.indexhtmlify == false) {
   // --no-meta flag was deliberately passed:
   execute(applyOverrides({}, argv))
 } else {
@@ -44,7 +46,8 @@ if (argv.meta) {
 // -- adapted from html-inject-meta/cli.js 
 
 function applyOverrides(data, opts) {
-  data['html-inject-meta'] = data['html-inject-meta'] || data.metadataify || {};
+  data['html-inject-meta'] = data['html-inject-meta'] || data.metadataify || {}
+  data.indexhtmlify = argv.indexhtmlify
 
   function setField (inField, outField) {
     if (!outField) {

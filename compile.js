@@ -12,6 +12,7 @@ module.exports = function compile(filename, opts, cb) {
     opts = null
   }
   opts = opts || {}
+  const makeDoc  = opts.indexhtmlify == false ? false : true
   debug('browserify opts: %o', opts)
   const browserify = Browserify(opts)
   browserify.transform(file => eolfix(), {global: true})
@@ -22,7 +23,9 @@ module.exports = function compile(filename, opts, cb) {
       console.error(err.annotated)
       return cb(err)
     }
-    buffer = Buffer.from(htmlInlineEscape(buffer.toString()))
+    if (makeDoc) {
+      buffer = Buffer.from(htmlInlineEscape(buffer.toString()))
+    }
     const bl_hash = BufferList()
     bl_hash.append(buffer)
 
@@ -30,6 +33,10 @@ module.exports = function compile(filename, opts, cb) {
     hash.update(bl_hash.slice())
     const sha = hash.digest('base64')
 
+    if (!makeDoc) {
+      return cb(null, {sha, js: buffer})
+    }
+    
     const doc = BufferList()
     doc.append(buffer)
     doc.pipe(indexhtmlify())

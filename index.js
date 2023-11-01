@@ -6,10 +6,14 @@ const defer = require('pull-defer')
 module.exports = function(filename, opts) {
   opts = opts || {}
   const ret = defer.source()
-  compile(filename, (err, result) => {
+  compile(filename, opts, (err, result) => {
     if (err) return ret.resolve(pull.error(err))
-    const {body, sha} = result
-    ret.resolve(addMeta(body, sha, opts))
+    const {body, js, sha} = result
+    if (body) return ret.resolve(addMeta(body, sha, opts))
+    ret.resolve(pull.values([
+      `// script sha256 (this line excluded): ${sha}\n`,
+      js
+    ]))
   })
   return ret
 }

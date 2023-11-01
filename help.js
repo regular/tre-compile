@@ -11,6 +11,7 @@ DESCRIPTION
 
   MAINJS              name of the apps main javascript file (typically index.js)
   [--no-meta]         don't use meta data (author, title, description etc) from  package.json
+  [--no-indexhtmlify] produce a javascript file instead of html, implies --no-meta 
   [--meta JSONFILE]   read meta data from JSONFILE instead of the package,json closest to MAINJS
   [--help]
 
