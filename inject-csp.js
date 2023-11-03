@@ -6,6 +6,8 @@ module.exports = htmlInjectCSP
 function extractInputData(output, data) {
   debug(data)
   const {csp, generator, keywords, repositoryUrl, repositoryBranch, commit, main, base, manifest} = data
+  const themeColor = data['theme-color']
+
   if (csp) {
     output['http-equiv']['Content-Security-Policy'] = csp
   }
@@ -23,6 +25,9 @@ function extractInputData(output, data) {
   }
   if (main) {
     output.name[`tre:main`] = main
+  }
+  if (themeColor) {
+    output.name['theme-color'] = themeColor
   }
   if (keywords) {
     const kws = Array.isArray(keywords) ? keywords.join(',') : `${keywords}`

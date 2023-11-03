@@ -8,6 +8,7 @@
   "homepage": "https://github.com/regular/tre-compile#readme",
   "html-inject-meta": {
     "base": "belong to us",
-    "manifest": "manimani"
+    "manifest": "manimani",
+    "theme-color": "blue"
   }
 }

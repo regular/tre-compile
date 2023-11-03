@@ -98,6 +98,7 @@ function applyOverrides(pkg, argv) {
   setField('keywords')
   setField('base')
   setField('manifest')
+  setField('theme-color')
   setField('url')
 
   return metadata

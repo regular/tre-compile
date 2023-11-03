@@ -8,4 +8,5 @@ module.exports = bin =>
   '[--title TITLE] ' +
   '[--author AUTHOR] ' +
   '[--manifest MANIFEST] ' +
+  '[--theme-color CSSCOLOR] ' +
   '[--help]'

@@ -19,11 +19,12 @@ META DATA OVERRIDES
 
   These options override any meta data fields provided by either package.json or JSONFILE
 
-  [--keywords KEYWORDS] comma-separated list of keywords to add to meta data
-  [--description DESC]  adds or overrides description
-  [--title TITLE]       adds or overrides title tag content
-  [--author AUTHOR]     adds or overrides author field in meta data
-  [--manifest MANIFEST] adds or overrides manifest field in meta data
+  [--keywords KEYWORDS]  comma-separated list of keywords to add to meta data
+  [--description DESC]   adds or overrides description
+  [--title TITLE]        adds or overrides title tag content
+  [--author AUTHOR]      adds or overrides author field in meta data
+  [--manifest MANIFEST]  adds or overrides manifest field in meta data
+  [--theme-color CSSCOL] adds or overrides theme-color field in meta data
 
 FILES
 
