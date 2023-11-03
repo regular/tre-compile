@@ -20,7 +20,8 @@ module.exports = function addMeta(body, sha, opts) {
       csp: `script-src 'sha256-${sha}' 'wasm-eval'; worker-src blob: data: 'self' 'wasm-eval'`,
       generator: `${pkg.name} ${pkg.version}`,
       keywords: (opts['html-inject-meta'] && opts['html-inject-meta'].keywords) || opts.keywords,
-      base: opts.base
+      base: opts.base,
+      manifest: opts.manifest
     })
   )
   const ret = pull(

@@ -22,7 +22,8 @@ META DATA OVERRIDES
   [--keywords KEYWORDS] comma-separated list of keywords to add to meta data
   [--description DESC]  adds or overrides description
   [--title TITLE]       adds or overrides title tag content
-  [--author AUTHOR]     adds or overrides authro field in meta data
+  [--author AUTHOR]     adds or overrides author field in meta data
+  [--manifest MANIFEST] adds or overrides manifest field in meta data
 
 FILES
 

@@ -7,4 +7,5 @@ module.exports = bin =>
   '[--description DESC] ' +
   '[--title TITLE] ' +
   '[--author AUTHOR] ' +
+  '[--manifest MANIFEST] ' +
   '[--help]'
