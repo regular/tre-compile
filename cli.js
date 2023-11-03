@@ -69,6 +69,7 @@ function applyOverrides(data, opts) {
   setField('title', 'name')
   setField('author')
   setField('keywords')
+  setField('manifest')
   setField('url')
 
   return data
