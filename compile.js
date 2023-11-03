@@ -32,6 +32,7 @@ module.exports = function compile(filename, opts, cb) {
     const hash = crypto.createHash('sha256')
     hash.update(bl_hash.slice())
     const sha = hash.digest('base64')
+    debug('script hash is %s', sha)
 
     if (!makeDoc) {
       return cb(null, {sha, js: buffer})
@@ -45,7 +46,6 @@ module.exports = function compile(filename, opts, cb) {
         console.error(err.message)
         return cb(err)
       }
-      debug('script hash is %s', sha)
       cb(null, {sha, body: buffer})
     }))
   }))

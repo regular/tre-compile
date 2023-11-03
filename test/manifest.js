@@ -10,7 +10,7 @@ test('generated HTML has correct manifest link', t=>{
   const tr = trumpet()
 
   pull(
-    compile(__dirname + '/fixtures/hello.js', {manifest: 'manimani'}),
+    compile(__dirname + '/fixtures/hello.js', {"html-inject-meta": {manifest: 'manimani'}}),
     pull.through(console.log),
     toPull.sink(tr, err=>{
       if (err) throw err

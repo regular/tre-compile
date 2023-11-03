@@ -6,93 +6,32 @@ const pull = require('pull-stream')
 const {stdout} = require('pull-stdio')
 const minimist = require('minimist')
 const pkgUp = require('pkg-up')
-const compileSource = require('./')
+const compileSource = require('.')
 const {workingDirIsClean, gitInfo} = require('./git-meta')
 const debug = require('debug')('cli')
 
 const argv = minimist(process.argv.slice(2))
 debug('argv', argv)
 
-if (argv._.length<1 || argv.help) {
-  const bin = argv['run-by-tre-cli'] ? 'tre compile' : 'tre-compile'
-  if (argv.help) {
-    console.log(require('./help')(bin))
-    process.exit(0)
-  } else {
-    console.error('Missing argument\nUsage: ' + require('./usage')(bin))
-    process.exit(1)
-  }
-}
-
-const filename = argv._[0]
-
-if (argv.meta) {
-  // input is specified:
-  fs.readFile(argv.meta, processMetaFile)
-} else if (argv.meta === false || argv.indexhtmlify == false) {
-  // --no-meta flag was deliberately passed:
-  execute(applyOverrides({}, argv))
-} else {
-  // meta is not specified:
-  pkgUp({cwd: dirname(filename)}).then( pkgpath => {
-    if (!pkgpath) {
-      console.error('No package.json found.')
+async function main(argv) {
+  if (argv._.length<1 || argv.help) {
+    const bin = argv['run-by-tre-cli'] ? 'tre compile' : 'tre-compile'
+    if (argv.help) {
+      console.log(require('./help')(bin))
+      process.exit(0)
+    } else {
+      console.error('Missing argument\nUsage: ' + require('./usage')(bin))
       process.exit(1)
     }
-    fs.readFile(pkgpath, processMetaFile)
-  })
+  }
+  const filename = argv._[0]
+  const metadata = applyOverrides(await getMetaData(filename, argv), argv)
+  execute(filename, metadata, argv)
 }
 
-// -- adapted from html-inject-meta/cli.js 
+main(argv)
 
-function applyOverrides(data, opts) {
-  data['html-inject-meta'] = data['html-inject-meta'] || data.metadataify || {}
-  data.indexhtmlify = argv.indexhtmlify
-
-  function setField (inField, outField) {
-    if (!outField) {
-      outField = inField;
-    }
-    const value = opts[inField]
-
-    if (value == undefined) return
-
-    if (!['string', 'number'].includes(typeof value) && !Array.isArray(value)) {
-      console.error(`${inField} must be string, number or array`)
-      process.exit(1)
-    }
-
-    data['html-inject-meta'][outField] = value
-  }
-
-  setField('description')
-  setField('title', 'name')
-  setField('author')
-  setField('keywords')
-  setField('manifest')
-  setField('url')
-
-  return data
-}
-
-function processMetaFile(err, data) {
-  let parsedData
-
-  if (err) {
-    console.error(err.message)
-    process.exit(1)
-  }
-
-  try {
-    parsedData = JSON.parse(data)
-  } catch (e) {
-    console.error(e.message)
-    process.exit(1)
-  }
-  execute(applyOverrides(parsedData, argv))
-}
-
-function execute(opts) {
+function execute(filename, metadata, argv) {
   const sourceFile = resolve(filename)
   //console.error('source:', sourceFile)
   const repoPath = dirname(sourceFile)
@@ -107,12 +46,16 @@ function execute(opts) {
     } else if (err) {
       console.error('Working directory is not clean -- forced to continue anyway')
     }
-    gitInfo(repoPath, (err, info) =>{
+    gitInfo(repoPath, (err, gitinfo) =>{
       if (err) {
-      console.error(err.message)
+        console.error(err.message)
         process.exit(1)
       }
-      compileToStdout(filename, Object.assign({}, opts, info, {main}))
+      compileToStdout(filename, {
+        "html-inject-meta": Object.assign({}, metadata, gitinfo),
+        main,
+        indexhtmlify: argv.indexhtmlify
+      })
     })
   })
 }
@@ -128,3 +71,35 @@ function compileToStdout(filename, opts) {
     })
   )
 }
+
+// -- util
+
+async function getMetaData(filename, argv) {
+  if (argv.meta === false || argv.indexhtmlify == false) return {}
+  const metafile = argv.meta || await pkgUp({cwd: dirname(filename)})
+  return JSON.parse(fs.readFileSync(metafile))
+}
+
+function applyOverrides(pkg, argv) {
+  pkg = Object.assign({}, pkg, pkg['html-inject-meta'] || pkg.metadataify || {})
+  const metadata = {}
+
+  function setField(inField, outField) {
+    if (!outField) outField = inField
+    const value = argv[inField] || pkg[inField]
+    if (value == undefined) return
+    if (!['string', 'number'].includes(typeof value) && !Array.isArray(value)) throw new Error(`${inField} must be string, number or array`)
+    metadata[outField] = value
+  }
+
+  setField('description')
+  setField('name')
+  setField('author')
+  setField('keywords')
+  setField('base')
+  setField('manifest')
+  setField('url')
+
+  return metadata
+}
+

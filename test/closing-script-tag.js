@@ -19,7 +19,7 @@ test('generated HTML has correct CSP meta tag', t=>{
   tr.select('head > meta[http-equiv=Content-Security-Policy]', elem =>{
     elem.getAttribute('content', content => {
       console.log('content', content)
-      t.equal(content, "script-src 'sha256-W4SQyoH4c7dyAi1kw8mICu8k61g5USwldheyjN97uBU=';")
+      t.equal(content,'script-src \'sha256-W4SQyoH4c7dyAi1kw8mICu8k61g5USwldheyjN97uBU=\' \'wasm-eval\'; worker-src blob: data: \'self\' \'wasm-eval\'')
     })
   })
 })

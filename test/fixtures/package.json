@@ -6,6 +6,8 @@
   "author": "Jan Bölsche <jan@lagomorph.de> (https://regular.codes/)",
   "license": "ISC",
   "homepage": "https://github.com/regular/tre-compile#readme",
-  "base": "belong to us",
-  "manifest": "manimani"
+  "html-inject-meta": {
+    "base": "belong to us",
+    "manifest": "manimani"
+  }
 }

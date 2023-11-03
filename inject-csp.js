@@ -1,8 +1,10 @@
 const hyperstream = require('hyperstream')
+const debug = require('debug')('inject-csp')
 
 module.exports = htmlInjectCSP
 
 function extractInputData(output, data) {
+  debug(data)
   const {csp, generator, keywords, repositoryUrl, repositoryBranch, commit, main, base, manifest} = data
   if (csp) {
     output['http-equiv']['Content-Security-Policy'] = csp

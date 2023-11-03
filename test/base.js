@@ -10,7 +10,8 @@ test('generated HTML has correct base tag', t=>{
   const tr = trumpet()
 
   pull(
-    compile(__dirname + '/fixtures/hello.js', {base: 'belong to us'}),
+    compile(__dirname + '/fixtures/hello.js', {"html-inject-meta":{base: 'belong to us'}}),
+    pull.through(console.log),
     toPull.sink(tr, err=>{
       if (err) throw err
     })
