@@ -54,7 +54,8 @@ function execute(filename, metadata, argv) {
       compileToStdout(filename, {
         "html-inject-meta": Object.assign({}, metadata, gitinfo),
         main,
-        indexhtmlify: argv.indexhtmlify
+        indexhtmlify: argv.indexhtmlify,
+        insertCSP: argv.csp
       })
     })
   })

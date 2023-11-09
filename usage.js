@@ -1,6 +1,7 @@
 module.exports = bin =>
   `${bin} MAINJS ` +
   '[--no-indexhtmlify] ' +
+  '[--no-csp] ' +
   '[--no-meta] ' +
   '[--meta JSONFILE] ' +
   '[--keywords KEYWORD1,KEYWORD2,...] ' +
