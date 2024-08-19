@@ -19,7 +19,7 @@
 
         src = ./.;
 
-        npmDepsHash = "sha256-4o9oV4WH5AHuZJARVf9URtQmZ3OwNXS14M1iKqtWXus=";
+        npmDepsHash = "sha256-j4Bn7FD9v9mIxt1hfFUJKGgyKQR/UEfilf2InwQBeZE=";
         #makeCacheWritable = true;
         npmFlags = [ "--only=prouction" "--no-optional"];
         dontNpmBuild = true;
