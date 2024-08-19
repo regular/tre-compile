@@ -24,7 +24,8 @@
         npmFlags = [ "--only=prouction" "--no-optional"];
         dontNpmBuild = true;
 
-        propagatedBuildInputs = [ pkgs.git ];
+        #propagatedBuildInputs = [ pkgs.git ];
+        propagatedNativeBuildInputs = [ pkgs.git ];
         nativeBuildInputs = [ pkgs.makeWrapper pkgs.hello ];
         postInstall = ''
           wrapProgram $out/bin/tre-compile \
