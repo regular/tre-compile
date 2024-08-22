@@ -14,19 +14,15 @@
       default = pkgs.buildNpmPackage rec {
         owner = "regular";
         repo = "tre-compile";
-
         name = repo;
-
         src = ./.;
 
         npmDepsHash = "sha256-j4Bn7FD9v9mIxt1hfFUJKGgyKQR/UEfilf2InwQBeZE=";
-        #makeCacheWritable = true;
         npmFlags = [ "--only=prouction" "--no-optional"];
         dontNpmBuild = true;
 
-        #propagatedBuildInputs = [ pkgs.git ];
-        propagatedNativeBuildInputs = [ pkgs.git ];
-        nativeBuildInputs = [ pkgs.makeWrapper pkgs.hello ];
+        propagatedBuildInputs = [ pkgs.git ];
+        nativeBuildInputs = [ pkgs.makeWrapper ];
         postInstall = ''
           wrapProgram $out/bin/tre-compile \
           --set GIT_EXECUTABLE_PATH ${pkgs.git}/bin/git
@@ -47,7 +43,6 @@
         buildInputs = [
           pkgs.git
           pkgs.nodejs
-          pkgs.hello
         ];
       };
     });

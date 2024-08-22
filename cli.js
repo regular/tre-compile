@@ -5,7 +5,7 @@ const {dirname, resolve, relative} = require('path')
 const pull = require('pull-stream')
 const {stdout} = require('pull-stdio')
 const minimist = require('minimist')
-const pkgUp = require('pkg-up')
+const findup = require('./findup')
 const compileSource = require('.')
 const {workingDirIsClean, gitInfo} = require('./git-meta')
 const debug = require('debug')('cli')
@@ -24,40 +24,64 @@ async function main(argv) {
       process.exit(1)
     }
   }
-  const filename = argv._[0]
-  const metadata = applyOverrides(await getMetaData(filename, argv), argv)
-  execute(filename, metadata, argv)
+  await execute(argv)
 }
 
 main(argv)
 
-function execute(filename, metadata, argv) {
+async function execute(argv) {
+  const filename = argv._[0]
   const sourceFile = resolve(filename)
+  debug('sourcefile', sourceFile)
+  const sourceDir = dirname(sourceFile)
+  debug('sourceDir', sourceDir)
+
   //console.error('source:', sourceFile)
-  const repoPath = dirname(sourceFile)
-  console.error('repository path:', repoPath)
+  const dotGit = findup('/', sourceDir, '.git')
+  let repoPath
+  if (dotGit) {
+    debug('Found .git at %s', dotGit)
+    repoPath = dirname(dotGit)
+    console.error('repository path:', repoPath)
+  } else {
+    console.error('Did not find .git')
+    const packageJSON = findup('/', sourceDir, 'package.json')
+    if (!packageJSON) {
+      console.error('Neither .git nor package.json were found in any parent dir -- giving uo.')
+      process.exit(1)
+    }
+    repoPath = dirname(packageJSON)
+    console.error('assuming repository path (based on location of package.json):', repoPath)
+  }
   const main = relative(repoPath, sourceFile)
   console.error('main:', main)
 
-  workingDirIsClean(repoPath, err=>{
-    if (err && !argv.force) {
-      console.error(err.message)
+  const skipGit = argv.git == false
+  if (skipGit) console.error('Will not use git.')
+
+  const metadata = applyOverrides(getMetaData(sourceFile, argv), argv)
+  debug('metadata: %O', metadata)
+
+  const isClean = skipGit ? true : await workingDirIsClean(repoPath)
+  
+  if (!isClean) {
+    if (!argv.force) {
+      const msg = 
+        `Working directory is not clean: ${repoPath}\n` +
+        `Please commit and try again, or use --force.\n`
+      console.error(msg)
       process.exit(1)
-    } else if (err) {
+    } else {
       console.error('Working directory is not clean -- forced to continue anyway')
     }
-    gitInfo(repoPath, (err, gitinfo) =>{
-      if (err) {
-        console.error(err.message)
-        process.exit(1)
-      }
-      compileToStdout(filename, {
-        "html-inject-meta": Object.assign({}, metadata, gitinfo),
-        main,
-        indexhtmlify: argv.indexhtmlify,
-        insertCSP: argv.csp
-      })
-    })
+  }
+
+  const gitinfo = skipGit ? {} : await gitInfo(repoPath)
+  compileToStdout(filename, {
+    "html-inject-meta": Object.assign({}, metadata, gitinfo),
+    main,
+    indexhtmlify: argv.indexhtmlify,
+    insertCSP: argv.csp
   })
 }
 
@@ -75,32 +99,28 @@ function compileToStdout(filename, opts) {
 
 // -- util
 
-async function getMetaData(filename, argv) {
+function getMetaData(sourceFile, argv) {
   if (argv.meta === false || argv.indexhtmlify == false) return {}
-  const metafile = argv.meta || await pkgUp({cwd: dirname(filename)})
-  return JSON.parse(fs.readFileSync(metafile))
+  const metafile = argv.meta || findup('/', dirname(sourceFile), 'package.json')
+  if (!metafile) return {}
+  try {
+    return JSON.parse(fs.readFileSync(metafile))
+  } catch(err) {
+    console.error(`Unable to read ${metafile}: ${err.message}`)
+    process.exit(1)
+  }
 }
-
+ 
 function applyOverrides(pkg, argv) {
   pkg = Object.assign({}, pkg, pkg['html-inject-meta'] || pkg.metadataify || {})
   const metadata = {}
 
-  function setField(inField, outField) {
-    if (!outField) outField = inField
-    const value = argv[inField] || pkg[inField]
-    if (value == undefined) return
-    if (!['string', 'number'].includes(typeof value) && !Array.isArray(value)) throw new Error(`${inField} must be string, number or array`)
-    metadata[outField] = value
-  }
-
-  setField('description')
-  setField('name')
-  setField('author')
-  setField('keywords')
-  setField('base')
-  setField('manifest')
-  setField('theme-color')
-  setField('url')
+  const fields = 'description name author keywords base manifest theme-color url'.split(' ')
+  fields.forEach( name=>{
+    const value = argv[name] !== undefined ? argv[name] : pkg[name]
+    if (value !== undefined && !['string', 'number'].includes(typeof value) && !Array.isArray(value)) throw new Error(`${name} must be string, number or array`)
+    metadata[name] = value
+  })
 
   return metadata
 }

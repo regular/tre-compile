@@ -33,7 +33,6 @@
     "indexhtmlify": "^2.0.1",
     "minimist": "^1.2.5",
     "multicb": "^1.2.2",
-    "pkg-up": "^3.1.0",
     "pull-defer": "^0.2.3",
     "pull-stdio": "^1.0.0",
     "pull-stream": "^3.6.14",

@@ -25,37 +25,36 @@ function exec(cmdline, opts, cb) {
   })
 }
 
-function workingDirIsClean(cwd, cb) {
-  exec('git status --porcelain', {cwd}, (err, status) => {
-    if (err) {
-      err = new Error('git status failed: ' + err.message)
-
-      return cb(err)
-    }
-    if (status.replace(/\n/g,''.length)) {
-      const msg = 
-        `Working directory is not clean: ${cwd}\n` +
-        `${status}\n` +
-        `Please commit and try again.\n`
-      return cb(new Error(msg))
-    }
-    cb(null, true)
+async function workingDirIsClean(cwd) {
+  return new Promise( (resolve, reject)=>{
+    exec('git status --porcelain', {cwd}, (err, status) => {
+      if (err) {
+        err = new Error('git status failed: ' + err.message)
+        return rejet(err)
+      }
+      if (status.replace(/\n/g,'').length) {
+        return resolve(false)
+      }
+      resolve(true)
+    })
   })
 }
 
 function gitInfo(cwd, cb) {
-  const done = multicb({pluck: 1, spread: true})
+  return new Promise( (resolve, reject)=>{
+    const done = multicb({pluck: 1, spread: true})
 
-  exec('git describe --dirty --always', {cwd}, done())
-  exec('git remote get-url origin', {cwd}, done())
-  exec('git symbolic-ref --short HEAD', {cwd}, done())
+    exec('git describe --dirty --always', {cwd}, done())
+    exec('git remote get-url origin', {cwd}, done())
+    exec('git symbolic-ref --short HEAD', {cwd}, done())
 
-  done( (err, ref, url, branch) => {
-    if (err) return cb(err)
-    cb(null, {
-      commit: ref.replace(/\n/,''),
-      repositoryUrl: url.replace(/\n/,''),
-      repositoryBranch: branch.replace(/\n/,'')
+    done( (err, ref, url, branch) => {
+      if (err) return reject(err)
+      resolve({
+        commit: ref.replace(/\n/,''),
+        repositoryUrl: url.replace(/\n/,''),
+        repositoryBranch: branch.replace(/\n/,'')
+      })
     })
   })
 }
