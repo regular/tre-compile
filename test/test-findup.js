@@ -13,3 +13,15 @@ test('immediate', t=>{
   )
   t.end()
 })
+
+test('/', t=>{
+  t.equal(
+    findUp( '/', __dirname, 'etc'),
+    '/etc'
+  )
+  t.equal(
+    findUp( '/', __dirname, 'aisdfsaiddit'),
+    false
+  )
+  t.end()
+})

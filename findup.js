@@ -16,9 +16,13 @@ function search(root, cwd, filename) {
     debug('Looking for %s, found at: %s', filename, candidate)
     return candidate
   }
-  const segments  = cwd.split(path.sep)
+  debug('root="%s", cwd="%s"', root, cwd)
+  if (root == cwd) return false
+
+  const segments  = cwd.split(path.sep).slice(1)
   segments.pop()
-  cwd = path.sep + path.join.apply(path, segments)
+  debug('segments %o', segments)
+  cwd = path.sep + (segments.length ? path.join.apply(path, segments) : '')
   debug('new cwd', cwd)
   return search(root, cwd, filename)
 }
