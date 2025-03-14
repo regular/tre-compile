@@ -4,6 +4,7 @@ module.exports = bin =>
   '[--no-csp] ' +
   '[--no-meta] ' +
   '[--meta JSONFILE] ' +
+  '[--meta-tag.NAME VALUE] ' +
   '[--keywords KEYWORD1,KEYWORD2,...] ' +
   '[--description DESC] ' +
   '[--title TITLE] ' +

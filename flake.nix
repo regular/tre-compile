@@ -17,7 +17,7 @@
         name = repo;
         src = ./.;
 
-        npmDepsHash = "sha256-j4Bn7FD9v9mIxt1hfFUJKGgyKQR/UEfilf2InwQBeZE=";
+        npmDepsHash = "sha256-kfrWphwLcRmWoaaNT1tJoe5KU4hCQ/mAtP3vlC1b89c=";
         npmFlags = [ "--only=prouction" "--no-optional"];
         dontNpmBuild = true;
 

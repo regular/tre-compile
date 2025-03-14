@@ -81,7 +81,8 @@ async function execute(argv) {
     "html-inject-meta": Object.assign({}, metadata, gitinfo),
     main,
     indexhtmlify: argv.indexhtmlify,
-    insertCSP: argv.csp
+    insertCSP: argv.csp,
+    'meta-tag': argv['meta-tag']
   })
 }
 

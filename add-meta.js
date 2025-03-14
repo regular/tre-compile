@@ -17,6 +17,7 @@ module.exports = function addMeta(body, sha, opts) {
     injectCSP(Object.assign({}, opts['html-inject-meta'] || {}, {
       csp: opts.insertCSP == false ? '' : `script-src 'sha256-${sha}' 'wasm-eval'; worker-src blob: data: 'self' 'wasm-eval'`,
       generator: `${pkg.name} ${pkg.version}`,
+      custom: opts['meta-tag']
     }))
   )
   const ret = pull(

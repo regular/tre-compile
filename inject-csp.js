@@ -5,7 +5,7 @@ module.exports = htmlInjectCSP
 
 function extractInputData(output, data) {
   debug(data)
-  const {csp, generator, keywords, repositoryUrl, repositoryBranch, commit, main, base, manifest} = data
+  const {csp, generator, keywords, repositoryUrl, repositoryBranch, commit, main, base, manifest, custom} = data
   const themeColor = data['theme-color']
 
   if (csp) {
@@ -35,6 +35,12 @@ function extractInputData(output, data) {
   }
   output.base = base
   output.manifest = manifest
+
+  if (custom) {
+    Object.entries(custom).forEach( ([name, value])=>{
+      output.name[name] = value
+    })
+  }
 }
 
 function extractMetadataifyData(output, data) {
@@ -76,6 +82,7 @@ function htmlInjectCSP(data) {
 
   extractInputData(fields, data)
   extractMetadataifyData(fields, data['html-inject-meta'])
+  debug('fields: %O', fields)
   return hyperstream(fieldsToChanges(fields));
 }
 

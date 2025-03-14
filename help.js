@@ -14,6 +14,7 @@ DESCRIPTION
   [--no-indexhtmlify] produce a javascript file instead of html, implies --no-meta 
   [--no-csp]          do not insert a Content-Security-Policy meta tag
   [--meta JSONFILE]   read meta data from JSONFILE instead of the package,json closest to MAINJS
+  [--meta-tag.NAME VALUE] adds custom <meta name="NAME" content="VALUE">
   [--help]
 
 META DATA OVERRIDES
